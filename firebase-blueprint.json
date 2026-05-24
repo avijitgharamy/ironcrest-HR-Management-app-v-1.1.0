@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "RegistrationData": {
+      "title": "RegistrationData",
+      "description": "Onboarding profile registration information and verification status.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "personal": {
+          "type": "object"
+        },
+        "professional": {
+          "type": "object"
+        },
+        "contact": {
+          "type": "object"
+        },
+        "documents": {
+          "type": "object"
+        },
+        "isCompleted": {
+          "type": "boolean"
+        },
+        "submittedAt": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Draft", "Pending Approval", "Approved", "Rejected"]
+        },
+        "hrNotes": {
+          "type": "string"
+        }
+      },
+      "required": ["personal", "professional", "contact", "documents", "isCompleted", "status"]
+    }
+  },
+  "firestore": {
+    "/registrations/{registrationId}": {
+      "schema": "RegistrationData",
+      "description": "Store application and onboarding profile files."
+    }
+  }
+}

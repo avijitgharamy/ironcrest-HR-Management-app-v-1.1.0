@@ -1,0 +1,6 @@
+{
+  "name": "Ironcrest HR Portal",
+  "description": "Premium multi-screen workforce onboarding, career mapping, and human resources portal for Ironcrest Global Services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Reusable, hardened helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 3. Fortress rules for registrations
+    match /registrations/{registrationId} {
+      allow get: if isValidId(registrationId);
+      allow list: if true; // Allow backend server to list registrations safely
+
+      allow create: if isValidId(registrationId) &&
+                      incoming().id == registrationId &&
+                      incoming().personal is map &&
+                      incoming().personal.fullName is string &&
+                      incoming().personal.fullName.size() <= 128 &&
+                      incoming().isCompleted is bool &&
+                      incoming().status is string &&
+                      incoming().status in ['Draft', 'Pending Approval', 'Approved', 'Rejected'];
+
+      allow update: if isValidId(registrationId) &&
+                      incoming().id == registrationId &&
+                      incoming().isCompleted is bool &&
+                      incoming().status is string &&
+                      incoming().status in ['Draft', 'Pending Approval', 'Approved', 'Rejected'];
+
+      allow delete: if isValidId(registrationId);
+    }
+  }
+}
